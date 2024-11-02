@@ -2,6 +2,7 @@ package pl.nadwey.nadblocks.registry
 
 import org.bukkit.Material
 import pl.nadwey.nadblocks.NadBlocks
+import pl.nadwey.nadblocks.behavior.BlockIlluminates
 import pl.nadwey.nadblocks.block.Table
 import xyz.xenondevs.nova.addon.registry.BlockRegistry
 import xyz.xenondevs.nova.initialize.Init
@@ -13,6 +14,7 @@ import xyz.xenondevs.nova.world.block.behavior.BlockDrops
 import xyz.xenondevs.nova.world.block.behavior.BlockSounds
 import xyz.xenondevs.nova.world.block.behavior.Breakable
 import xyz.xenondevs.nova.world.block.sound.SoundGroup
+import xyz.xenondevs.nova.world.block.state.property.DefaultScopedBlockStateProperties.FACING_CARTESIAN
 import xyz.xenondevs.nova.world.block.state.property.DefaultScopedBlockStateProperties.FACING_HORIZONTAL
 import xyz.xenondevs.nova.world.item.tool.VanillaToolCategories
 import xyz.xenondevs.nova.world.item.tool.VanillaToolTiers
@@ -45,6 +47,21 @@ object Blocks : BlockRegistry by NadBlocks.registry {
         nonInteractiveBlock("drain_grate") {
             behaviors(BlockDrops, METAL, BlockSounds(SoundGroup.HEAVY_CORE))
             stateProperties(FACING_HORIZONTAL)
+            models {
+                selectModel { defaultModel.rotated() }
+                stateBacked(BackingStateCategory.LEAVES)
+            }
+        }
+
+    val LAMP =
+        nonInteractiveBlock("lamp") {
+            behaviors(
+                BlockDrops,
+                BlockIlluminates(15),
+                METAL,
+                BlockSounds(SoundGroup.METAL)
+            )
+            stateProperties(FACING_CARTESIAN)
             models {
                 selectModel { defaultModel.rotated() }
                 stateBacked(BackingStateCategory.LEAVES)
