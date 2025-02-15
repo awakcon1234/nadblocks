@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 group = "pl.nadwey.nadblocks"
 version = "1.0.0-SNAPSHOT"
 
@@ -22,28 +19,15 @@ dependencies {
 }
 
 addon {
-    id = project.name
     name = project.name.replaceFirstChar(Char::uppercase)
     version = project.version.toString()
-    novaVersion = libs.versions.nova
     main = "pl.nadwey.nadblocks.NadBlocks"
     authors = listOf("Nadwey")
-}
-
-tasks {
-    register<Copy>("addonJar") {
-        group = "build"
-        dependsOn("jar")
-        from(File(project.layout.buildDirectory.get().asFile, "libs/${project.name}-${project.version}.jar"))
-        into((project.findProperty("outDir") as? String)?.let(::File) ?: project.layout.buildDirectory.get().asFile)
-        rename { "${addonMetadata.get().addonName.get()}-${project.version}.jar" }
-    }
     
-    withType<KotlinCompile> {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_21
-        }
-    }
+    // output directory for the generated addon jar is read from the "outDir" project property (-PoutDir="...")
+    val outDir = project.findProperty("outDir")
+    if (outDir is String)
+        destination.set(File(outDir))
 }
 
 afterEvaluate {
